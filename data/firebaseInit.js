@@ -4,6 +4,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   initializeAuth,
+  signOut,
 } from 'firebase/auth';
 
 import { getReactNativePersistence } from 'firebase/auth/react-native';
@@ -38,4 +39,5 @@ export {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut,
 };
