@@ -12,6 +12,7 @@ import UserAvatar from 'react-native-user-avatar';
 import {
   fetchMessegesByRoomId,
   addNewMessegeInRoom,
+  updateLastMessegeExchagened,
 } from '../../data/firebaseApi';
 import { AuthContext } from '../../contextProvider/AuthProvider';
 import uuid from 'react-native-uuid';
@@ -21,14 +22,20 @@ export default function ChatRoomDetails({ route, navigation }) {
   const [isMessegeInputFocused, setIsMessegeInputFocused] = useState(false);
   const [messegeList, setMessegeList] = useState([]);
   const { userData } = useContext(AuthContext);
-  console.log(messegeList, 'messegeList');
+  console.log(userData, 'messegeList');
   useEffect(() => {
     (async () => {
-      const messeges = await fetchMessegesByRoomId(
-        route?.params?.roomId,
-        setMessegeList
-      );
-      setMessegeList(messeges);
+      try {
+        //fetching all messege in a room
+        const messeges = await fetchMessegesByRoomId(
+          route?.params?.roomId,
+          setMessegeList
+        );
+
+        setMessegeList(messeges);
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, [route?.params?.roomId]);
   const sendMessege = async () => {
@@ -38,8 +45,10 @@ export default function ChatRoomDetails({ route, navigation }) {
       sendAt: new Date(),
       id: uuid.v1(),
     };
+    setMessegeText('');
     setMessegeList((prevList) => [...prevList, messegeData]);
     await addNewMessegeInRoom(route?.params?.roomId, messegeData);
+    await updateLastMessegeExchagened(route?.params?.roomId, messegeData);
   };
   return (
     <View style={{ flex: 1 }}>
@@ -70,7 +79,7 @@ export default function ChatRoomDetails({ route, navigation }) {
             renderItem={({ item }) => (
               <MessegeTile
                 messegeData={item}
-                isRommieMessege={!userData?.id === item?.senderId}
+                isRommieMessege={!(userData?.id === item?.senderId)}
               />
             )}
             keyExtractor={(messege) => messege?.id}
@@ -82,11 +91,11 @@ export default function ChatRoomDetails({ route, navigation }) {
           type='text'
           placeholder='Type your Messege'
           onChangeText={(text) => setMessegeText(text)}
-          onBlur={() => checkNameError()}
           style={[
             styles.inputStyle,
             isMessegeInputFocused ? styles.focusedInput : {},
           ]}
+          value={messegeText}
           onFocus={() => setIsMessegeInputFocused(true)}
         />
 

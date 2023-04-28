@@ -29,6 +29,7 @@ export const fetchUserData = async (uid) => {
   const userSnap = await getDoc(docRef);
   return userSnap.data();
 };
+// fetch chat rooms of current loggedin user
 export const fetchChatRooms = async (userInfo, setChatRoomList) => {
   const chatRoomRef = collection(db, 'chatRooms');
   console.log(userInfo?.id);
@@ -57,4 +58,11 @@ export const fetchMessegesByRoomId = async (id, setMessegeList) => {
 export const addNewMessegeInRoom = async (roomId, messege) => {
   console.log(roomId, messege, 'messege');
   await setDoc(doc(db, 'chatRooms', roomId, 'messeges', messege.id), messege);
+};
+export const updateLastMessegeExchagened = async (roomId, messege) => {
+  const x = await updateDoc(doc(db, 'chatRooms', roomId), {
+    lastMessegeExchanged: messege?.messegeText,
+    lastMessegeAt: messege?.sendAt,
+  });
+  console.log(x, 'ld');
 };

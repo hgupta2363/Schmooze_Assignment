@@ -17,18 +17,22 @@ import { addUserFirestore } from '../../data/firebaseApi';
 import Loader from 'react-native-three-dots-loader';
 
 export default function LoginSignUpScreen() {
+  //input fields data
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  // input fields error Data
   const [emailerror, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [nameError, setNameError] = useState('');
+
   const [loading, setLoading] = useState(false);
+  //input field focus data
   const [isEmailInputFocused, setIsEmailInputFocused] = useState(false);
   const [isPasswordInputfoucused, setIsPasswordInputFocused] = useState(false);
   const [isNameInputFocused, setIsNameInputFocused] = useState(false);
-  const [result, setResult] = useState(null);
 
+  //this boolean give information wheteher this is a login screen or signup screen
   const [isSignupScreen, setIsSignupScreen] = useState(true);
 
   const handlePress = async () => {
@@ -50,6 +54,7 @@ export default function LoginSignUpScreen() {
     }
   };
 
+  //errorHandlers
   const checkEmailError = () => {
     if (
       !email ||
@@ -76,7 +81,7 @@ export default function LoginSignUpScreen() {
       return false;
     }
   };
-  console.log(checkEmailError(), checkPasswordError());
+  // disble login or signup button if there is any error
   const disableContinueButton = isSignupScreen
     ? checkEmailError() || checkPasswordError() || checkNameError()
     : checkEmailError() || checkPasswordError();
@@ -186,15 +191,6 @@ export default function LoginSignUpScreen() {
               : "You Don't have an account?  sign up"}
           </Text>
         </View>
-
-        {/* <button
-              onClick={() => continueWithPhoneNumber()}
-              className='phone_screen_button'
-              disabled={disableContinueButton}
-              style={{ opacity: disableContinueButton ? 0.3 : 1 }}
-            >
-              Continue
-            </button> */}
       </View>
     </View>
   );

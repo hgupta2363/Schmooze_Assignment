@@ -13,11 +13,12 @@ const ChatRoomeList = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      //fetching room of a specific user
       await fetchChatRooms(userData, setChatRoomList);
       setLoading(false);
     })();
   }, [userData]);
-  console.log(chatRoomList, 'chatRoomList');
+
   return (
     <>
       {loading ? (
